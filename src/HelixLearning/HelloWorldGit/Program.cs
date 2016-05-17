@@ -6,7 +6,7 @@ namespace HelloWorldGit
     {
         static void Main(string[] args)
         {
-            var sadMessage = "Hello world, Git!";
+            var sadMessage = "Hello world, MF!!!!!";
             Console.WriteLine("Nothing works :,(");
             Console.ReadKey(true);
         }
