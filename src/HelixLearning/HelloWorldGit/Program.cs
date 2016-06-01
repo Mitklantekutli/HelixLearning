@@ -18,7 +18,7 @@ namespace Drumstorments
         
         static void Main(string[] args)
         {
-            ConcatTests();
+            
             var fpath = @"E:\1.txt";
             var menuSelect = 0;
             
@@ -39,7 +39,7 @@ namespace Drumstorments
                         break;
                         
                     case 3:
-                        Program.ConcatCtrings();
+                        ConcatTests();
                         menuSelect = 0;
                         break;
                 }
@@ -49,7 +49,10 @@ namespace Drumstorments
 
         private static void ConcatTests()
         {
-            
+            ConcatStrings(null, null);
+            ConcatStrings(null, "message 2");
+            ConcatStrings("message 1", null);
+            ConcatStrings("message 1", "message 2");
         }
 
 
@@ -92,14 +95,15 @@ namespace Drumstorments
 @"Выберите действие:
 1 - смотреть существующий список
 2 - создать новый автомобиль
-3 - выход");
+3 - тестирование строк
+4 - выход");
             menuSelect = int.Parse(Console.ReadLine());
             }
             while (menuSelect != 1 & menuSelect != 2 & menuSelect != 3);
             return menuSelect;
         }
 
-        static void ConcatCtrings(string message1, string message2)
+        static void ConcatStrings(string message1, string message2)
         {
             //Console.WriteLine("Введите первую строку:");
             //var message1 = Console.ReadLine();
