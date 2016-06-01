@@ -28,7 +28,7 @@ namespace Drumstorments
                 switch (menuSelect)
                 {
                     case 1:
-                        Program.ConcatCtrings();
+                        Program.ViewList(fpath);
                         menuSelect = 0;
                         break;
 
@@ -36,9 +36,14 @@ namespace Drumstorments
                         Program.AddNewCar(fpath);
                         menuSelect = 0;
                         break;
+                        
+                    case 3:
+                        Program.ConcatCtrings();
+                        menuSelect = 0;
+                        break;
                 }
             }
-            while (menuSelect != 3);
+            while (menuSelect != 4);
         }
 
         
