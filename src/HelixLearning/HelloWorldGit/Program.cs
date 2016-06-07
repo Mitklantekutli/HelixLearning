@@ -10,7 +10,15 @@ namespace Drumstorments
     // 3. установить решарпер версию 8-9, у нас лицензии нету, у меня дистриб потерялся ;) - он поможет с форматированием кода
     // так же по форматированию кода можно ознакомиться с нотацией рсдн: https://rsdn.ru/article/mag/200401/codestyle.XML
     // Done  4. разобраться что такое var и заменить, где можно https://msdn.microsoft.com/ru-ru/library/bb383973.aspx?f=255&MSPPError=-2147217396
-    
+    // 5. Что происходит когда нет файла? Нужно что то с этим сделать
+    // 6. По пункту 2 - заиспользовать енам MenuSelect в свиче
+    // 7. Сохранение списка тачек
+    // 7.1 Сначала сделаем простое сохранение названий тачек - по названию на строку
+    // 7.2 Т.е. при добавлении нужно построчно записывать новые машины в файл
+    // 7.3 Должно корректно отрабатывать чтение сохраненного списка тачек
+    // 7.4 Сделать функцию удаления тачек из списка
+    // 7.5 Сделать функцию изменения названия тачки по номеру в списке (так же в рамках этого пункта нужно добавить нумерацию тачек в списке)
+    // Good luck :)
 
     class Program 
     {
@@ -38,23 +46,10 @@ namespace Drumstorments
                         menuSelect = 0;
                         break;
                         
-                    case 3:
-                        ConcatTests();
-                        menuSelect = 0;
-                        break;
                 }
             }
-            while (menuSelect != 4);
+            while (menuSelect != 3);
         }
-
-        private static void ConcatTests()
-        {
-            ConcatStrings(null, null);
-            ConcatStrings(null, "message 2");
-            ConcatStrings("message 1", null);
-            ConcatStrings("message 1", "message 2");
-        }
-
 
         //Смотрим список
         static void ViewList(string fpath)
@@ -66,9 +61,6 @@ namespace Drumstorments
                 Console.WriteLine("Car{1}: {0}", car,i);
             }
         }
-
-        
-
 
         //Добавляем тачку
         static void AddNewCar(string fpath)
@@ -95,28 +87,15 @@ namespace Drumstorments
 @"Выберите действие:
 1 - смотреть существующий список
 2 - создать новый автомобиль
-3 - тестирование строк
-4 - выход");
+3 - выход");
             menuSelect = int.Parse(Console.ReadLine());
             }
             while (menuSelect != 1 & menuSelect != 2 & menuSelect != 3);
             return menuSelect;
         }
 
-        static void ConcatStrings(string message1, string message2)
-        {
-            //Console.WriteLine("Введите первую строку:");
-            //var message1 = Console.ReadLine();
-            //Console.WriteLine("Введите вторую строку:");
-            //var message2 = Console.ReadLine();
-            string resultMessage;
-            if (message1.Length == 0 | message2.Length == 0) resultMessage = message1 + message2;
-            else resultMessage = message1 + ";" + message2;
-            Console.WriteLine(resultMessage);
-
-        }
-
     }
+
     public enum MenuSelect { View, New, Exit };
 
 
