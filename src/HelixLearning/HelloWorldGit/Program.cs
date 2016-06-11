@@ -5,105 +5,167 @@ using System.IO;
 namespace Drumstorments
 {
     //TODO
-    // DONE 1. Нужно путь к файлу вынести в переменную, чтобы можно было менять его из одного места
-    // 2. switch-case константы команд лучше именовать не цифрами а значениями перечисленй https://msdn.microsoft.com/ru-ru/library/sbbt4032.aspx
-    // 3. установить решарпер версию 8-9, у нас лицензии нету, у меня дистриб потерялся ;) - он поможет с форматированием кода
-    // так же по форматированию кода можно ознакомиться с нотацией рсдн: https://rsdn.ru/article/mag/200401/codestyle.XML
+    // DONE  1. Нужно путь к файлу вынести в переменную, чтобы можно было менять его из одного места
+    // DONE  2. switch-case константы команд лучше именовать не цифрами а значениями перечисленй https://msdn.microsoft.com/ru-ru/library/sbbt4032.aspx
+    // DONE  3. установить решарпер версию 8-9, у нас лицензии нету, у меня дистриб потерялся ;) - он поможет с форматированием кода
+    // DONE  так же по форматированию кода можно ознакомиться с нотацией рсдн: https://rsdn.ru/article/mag/200401/codestyle.XML
     // Done  4. разобраться что такое var и заменить, где можно https://msdn.microsoft.com/ru-ru/library/bb383973.aspx?f=255&MSPPError=-2147217396
-    // 5. Что происходит когда нет файла? Нужно что то с этим сделать
-    // 6. По пункту 2 - заиспользовать енам MenuSelect в свиче
-    // 7. Сохранение списка тачек
-    // 7.1 Сначала сделаем простое сохранение названий тачек - по названию на строку
-    // 7.2 Т.е. при добавлении нужно построчно записывать новые машины в файл
-    // 7.3 Должно корректно отрабатывать чтение сохраненного списка тачек
-    // 7.4 Сделать функцию удаления тачек из списка
-    // 7.5 Сделать функцию изменения названия тачки по номеру в списке (так же в рамках этого пункта нужно добавить нумерацию тачек в списке)
+    // Done  5. Что происходит когда нет файла? Нужно что то с этим сделать
+    // Done  6. По пункту 2 - заиспользовать енам MenuSelect в свиче
+    // Done 7. Сохранение списка тачек
+    // Done 7.1 Сначала сделаем простое сохранение названий тачек - по названию на строку
+    // Done 7.2 Т.е. при добавлении нужно построчно записывать новые машины в файл
+    // 7.3 Должно корректно отрабатывать чтение сохраненного списка тачек                         - несовсем понял
+    // Done 7.4 Сделать функцию удаления тачек из списка
+    // Done 7.5 Сделать функцию изменения названия тачки по номеру в списке (так же в рамках этого пункта нужно добавить нумерацию тачек в списке)
     // Good luck :)
 
     class Program 
     {
-        
-        
+
+        //MAIN---------------------------------------------------------------------------------
         static void Main(string[] args)
         {
             
             var fpath = @"E:\1.txt";
-            var menuSelect = 0;
-            
+            var menuSelect = MenuSelectTypes.None;
             Console.WriteLine("Добро пожаловать в магазин TiredTires!!");
+            Program.FileExist(fpath);
+                   
             do
             {
+                
                 menuSelect = Program.MenuSelect();
                 switch (menuSelect)
                 {
-                    case 1:
+                    case MenuSelectTypes.View:
                         Program.ViewList(fpath);
-                        menuSelect = 0;
+                        menuSelect = MenuSelectTypes.None;
                         break;
 
-                    case 2:
+                    case MenuSelectTypes.New:
                         Program.AddNewCar(fpath);
-                        menuSelect = 0;
+                        menuSelect = MenuSelectTypes.None;
                         break;
-                        
+
+                    case MenuSelectTypes.Remove:
+                        Program.RemoveCar(fpath);
+                        menuSelect = MenuSelectTypes.None;
+                        break;
+
+                    case MenuSelectTypes.Rename:
+                        Program.ReplaseCar(fpath);
+                        menuSelect = MenuSelectTypes.None;
+                        break;
                 }
             }
-            while (menuSelect != 3);
-        }
+            while (menuSelect != MenuSelectTypes.Exit);
 
-        //Смотрим список
-        static void ViewList(string fpath)
+        }
+        
+        //МЕТОД Проверяем сущ-вание файла------------------------------------------------------
+        static void FileExist(string fpath)
         {
-            var i = 0;
-            foreach (var car in File.ReadAllLines(fpath))
+            if (File.Exists(fpath) == false)
             {
-                i++;
-                Console.WriteLine("Car{1}: {0}", car,i);
+                Console.WriteLine("Файл не найден, создан новый");
+                File.Create(fpath);
             }
         }
 
-        //Добавляем тачку
+        //МЕТОД Смотрим список-----------------------------------------------------------------
+        static void ViewList(string fpath)
+        {
+            var i = 1;
+            foreach (var car in File.ReadAllLines(fpath))
+            {
+                Console.WriteLine("Машина №{1}: {0}", car,i);
+                i++;
+            }
+        }
+
+        //МЕТОД Добавляем тачку----------------------------------------------------------------
         static void AddNewCar(string fpath)
         {
             string car = Console.ReadLine();
-                        
-            //Добавляем новую тачку
             var carsList = new List<string>();
-            carsList.Add(car.ToLower());
-            //Судя по сигратуре, метод принимает 
-            // 1) путь + массив строк 
-            // 2) путь + коллекцию строк
+            foreach (string line in File.ReadAllLines(fpath))
+                    carsList.Add(line);
+            carsList.Add(car);
             File.WriteAllLines(fpath, carsList);
         }
-     
-   
-        //Выбор меню
-        static int MenuSelect ()
+
+        //МЕТОД Удаляем тачку------------------------------------------------------------------
+        static void RemoveCar(string fpath)
         {
-            int menuSelect = 0;
+            Program.ViewList(fpath);
+            Console.WriteLine("Выберите номер автомобиля, который нужно удалить:");
+
+            var carsList = new List<string>();           
+            int removeLine = 0;
+            string input;
             do
-            {
-            Console.WriteLine(
+                {
+                    input = Console.ReadLine();
+                }
+            while (int.TryParse(input, out removeLine));
+            foreach (string line in File.ReadAllLines(fpath))
+                {
+                    carsList.Add(line);
+                }
+            if (removeLine != 0) carsList.RemoveAt(removeLine--);
+            File.WriteAllLines(fpath, carsList);
+        }
+
+        //МЕТОД Переименовываем тачку----------------------------------------------------------
+        static void ReplaseCar(string fpath)
+        {
+            Program.ViewList(fpath);
+            Console.WriteLine("Выберите номер автомобиля, который нужно переименовать:");
+
+            var carsList = new List<string>();
+            int replaseLine = 0;
+            string input;
+            do
+                {
+                    input = Console.ReadLine();
+                }
+            while (int.TryParse(input, out replaseLine) == false);
+            Console.WriteLine("Введите новое имя:");
+            string newname = Console.ReadLine();
+            foreach (string line in File.ReadAllLines(fpath))
+                {
+                    carsList.Add(line);
+                }
+            carsList[replaseLine-1] = newname;
+            File.WriteAllLines(fpath, carsList);
+        }
+
+        //МЕТОД Выбор меню---------------------------------------------------------------------
+        static MenuSelectTypes MenuSelect ()
+        {
+            var menuSelect = 0;
+            do
+               {
+               Console.WriteLine(
 @"Выберите действие:
 1 - смотреть существующий список
 2 - создать новый автомобиль
-3 - выход");
-            menuSelect = int.Parse(Console.ReadLine());
-            }
-            while (menuSelect != 1 & menuSelect != 2 & menuSelect != 3);
-            return menuSelect;
+3 - удалить автомобиль
+4 - переименовать автомобиль
+5 - выход");
+               var input = Console.ReadLine();
+               int.TryParse(input, out menuSelect);
+               }
+            while ( menuSelect > 5 & menuSelect < 1 );
+            return (MenuSelectTypes)menuSelect;
         }
 
+        // Перечисление меню-------------------------------------------------------------------
+        public enum MenuSelectTypes {None, View, New, Remove, Rename, Exit};
     }
 
-    public enum MenuSelect { View, New, Exit };
-
-
-
-   
-
-
-
+    
 }
 
 
