@@ -103,17 +103,18 @@ namespace Drumstorments
 
             var carsList = new List<string>();           
             int removeLine = 0;
-            string input;
-            do
-                {
-                    input = Console.ReadLine();
-                }
-            while (int.TryParse(input, out removeLine));
+            var isCorrect = false;
+            string input;              
+            while (!isCorrect)
+            {
+                input = Console.ReadLine();
+                isCorrect = int.TryParse(input, out removeLine);
+            }
             foreach (string line in File.ReadAllLines(fpath))
                 {
                     carsList.Add(line);
                 }
-            if (removeLine != 0) carsList.RemoveAt(removeLine--);
+            if (removeLine != 0) carsList.RemoveAt(removeLine - 1);
             File.WriteAllLines(fpath, carsList);
         }
 
